@@ -7,7 +7,7 @@ namespace Handallo.Models
 {
     public class ShopOwner
     {
-        public int CustomerId { get; set; }
+        public int ShopOwnerId { get; set; }
         public String FirstName { get; set; }
         public String LastName { get; set; }
         public String Email { get; set; }

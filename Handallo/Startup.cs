@@ -40,6 +40,9 @@ namespace Handallo
                 app.UseHsts();
             }
 
+            app.UseCors(builder =>
+                builder.WithOrigins("http://localhost:3000/").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
+
             app.UseHttpsRedirection();
             app.UseMvc();
         }

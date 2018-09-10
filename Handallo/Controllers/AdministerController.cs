@@ -49,14 +49,14 @@ namespace Handallo.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult Post([FromBody] Login login)
+        public Boolean Post([FromBody] Login login)
         {
             if (__AdministerDataProvider.LoginAdmin(login))
             {
-                return Ok("login sucess");
+                return true;
             }
 
-            return BadRequest("incorrect Email or Password");
+            return false;
         }
 
         // PUT: api/Adminster/5
