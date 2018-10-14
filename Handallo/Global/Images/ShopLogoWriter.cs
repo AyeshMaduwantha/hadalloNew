@@ -15,6 +15,7 @@ namespace Handallo.Global.Images
     public class ShopLogoWriter : IShopLogoWriter
     {
         private readonly string connectionString;
+        private IShopLogoWriter _shopLogoWriterImplementation;
 
         public ShopLogoWriter()
         {
@@ -26,18 +27,19 @@ namespace Handallo.Global.Images
             get { return new SqlConnection(connectionString); }
         }
 
-        public async Task<string> UploadImage(IFormFile file)
+        public async Task<string> UploadImage(Image image)
         {
-            if (CheckIfImageFile(file))
+            if (CheckIfImageFile(image))
             {
-                return await WriteFile(file);
+                return await WriteFile(image);
             }
 
             return "Invalid image file";
         }
 
-        private bool CheckIfImageFile(IFormFile file)
+        private bool CheckIfImageFile(Image image)
         {
+            IFormFile file = image.image;
             byte[] fileBytes;
             using (var ms = new MemoryStream())
             {
@@ -48,9 +50,12 @@ namespace Handallo.Global.Images
             return ImageWriterHelper.GetImageFormat(fileBytes) != ImageWriterHelper.ImageFormat.unknown;
         }
 
-        private async Task<string> WriteFile(IFormFile file)
+        private async Task<string> WriteFile(Image image)
         {
             String fileName;
+            IFormFile file = image.image;
+            long Id = image.ShopId;
+
             try
             {
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
@@ -63,9 +68,9 @@ namespace Handallo.Global.Images
                     await file.CopyToAsync(bits);
                 }
 
-                Image image = new Image(path);
+                Image imageupload = new Image(path,Id);
 
-                toDb(image);
+                toDb(imageupload);
             }
             catch (Exception e)
             {
@@ -75,13 +80,14 @@ namespace Handallo.Global.Images
             return fileName;
         }
 
-        public void toDb(Image image)
+        public void toDb(Image imageUpload)
         {
-            string path = image.path;
+            string path = imageUpload.path;
+            long ShopId = unchecked((int)imageUpload.ShopId);
 
             using (IDbConnection dbConnection = Connection)
             {
-                string sQuery = "INSERT INTO shop(path)" + "VALUES(@path)";
+                string sQuery = "UPDATE shop SET path = @path WHERE ShopId = @ShopId ;"; //update product set CategoriesId = 2 where Categories = 'ab'
                 //SqlCommand cmd = new SqlCommand(sQuery, Connection);
                 //cmd.Parameters.Add("fileName", sqlDbType: SqlDbType.NVarChar).Value = fileName;
                 //cmd.Parameters.Add("path", sqlDbType: SqlDbType.NVarChar).Value = path;
@@ -89,11 +95,12 @@ namespace Handallo.Global.Images
                 // SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
 
                 dbConnection.Open();
-                dbConnection.Execute(sQuery, new {path = path});
+                dbConnection.Execute(sQuery, new {path = path,ShopId = ShopId});
             }
 
 
         }
+
 
 
     }

@@ -10,8 +10,8 @@ namespace Handallo.DataProvider.IDataProvider
 {
     interface IShopDataProvider
     {
-        Int64 RegisterShop(Shop shop);
+        Task<IActionResult> RegisterShop(Shop shop);
 
-        Task<IActionResult> UploadImage(IFormFile file);
+        Task<IActionResult> UploadImage(Image image);
     }
 }

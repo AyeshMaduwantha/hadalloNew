@@ -50,7 +50,7 @@ namespace Handallo.DataProvider.DataProvider
 
 
 
-        public Int64 RegisterShop(Shop shop)
+        public async Task<IActionResult> RegisterShop(Shop shop)
         {
             using (IDbConnection dbConnection = Connection)
             {
@@ -72,17 +72,22 @@ namespace Handallo.DataProvider.DataProvider
                     string sQuery1 = "SELECT ShopId FROM Shop WHERE Email = @email";
                     dbConnection.Open();
                     String result2 = dbConnection.QueryFirstOrDefault<String>(sQuery1, new { @Email = email });
-                    return number = Int64.Parse(result2);
+                    number = Int64.Parse(result2);
+                    Image toupload = new Image(shop.image,number);
+                    return await UploadImage(toupload);
+                    
+
 
                 }
             }
-            return 0;
+
+            return new BadRequestResult();
         }
 
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        public async Task<IActionResult> UploadImage(Image toupload)
         {
             ShopLogoWriter shopLogoWriter = new ShopLogoWriter();
-            var result = await shopLogoWriter.UploadImage(file);
+            var result = await shopLogoWriter.UploadImage(toupload);
             return new ObjectResult(result);
         }
     }

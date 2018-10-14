@@ -36,18 +36,18 @@ namespace Handallo.Controllers
           }*/
 
         [HttpPost("register")]
-        public Int64 Post([FromBody] Shop shop)
+        public async Task<IActionResult> RegisterShop([FromForm]Shop shop)
         {
-           return  (_ShopDataProvider.RegisterShop(shop));
+           return await  _ShopDataProvider.RegisterShop(shop);
             
         }
 
-        [HttpPost("logo")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+       /* [HttpPost("logo")]
+        public async Task<IActionResult> UploadImage(Shop shop)
         {
-            return await _ShopDataProvider.UploadImage(file);
+            return await _ShopDataProvider.RegisterShop(shop);
         }
-
+        */
 
 
     }
