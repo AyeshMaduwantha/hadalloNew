@@ -34,37 +34,37 @@ namespace Handallo.Controllers
         }*/
 
         [HttpPost("register")]
-        public ActionResult Post([FromBody] ShopOwner shopowner)
+        public Boolean Post([FromBody] ShopOwner shopowner)
         {
             if (_ShopOwnerDataProvider.RegisterShopOwner(shopowner))
             {
-                return Ok();
+                return true;
             }
 
-            return BadRequest();
+            return false;
         }
 
         [HttpPost("login")]
-        public ActionResult Post([FromBody] Login login)
+        public Boolean Post([FromBody] Login login)
         {
             if (_ShopOwnerDataProvider.LoginShopOwner(login))
             {
-                return Ok();
+                return true;
             }
 
-            return BadRequest();
+            return false;
         }
 
-    /*    // PUT: api/ShopOwner/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        /*    // PUT: api/ShopOwner/5
+            [HttpPut("{id}")]
+            public void Put(int id, [FromBody] string value)
+            {
+            }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        } */
+            // DELETE: api/ApiWithActions/5
+            [HttpDelete("{id}")]
+            public void Delete(int id)
+            {
+            } */
     }
 }
