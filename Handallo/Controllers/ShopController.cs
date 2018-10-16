@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Handallo.DataProvider;
 using Handallo.DataProvider.DataProvider;
 using Handallo.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,7 @@ namespace Handallo.Controllers
             _ShopDataProvider = new ShopDataProvider();
         }
         // GET: api/Shop
-        [HttpGet]
+        [HttpGet, Authorize]
         public dynamic Get()
         {
             return _ShopDataProvider.viewShops();

@@ -5,7 +5,11 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Handallo.Global;
 using Handallo.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Handallo.DataProvider
 {
@@ -26,7 +30,7 @@ namespace Handallo.DataProvider
             }
         }
 
-        public Customer Getustomer(int CustomerId)
+        public Customer GetCustomer(int CustomerId)
         {
             using (IDbConnection dbConnection = Connection)
             {
@@ -41,12 +45,63 @@ namespace Handallo.DataProvider
         public bool RegisterCustomer(Customer customer)
         {
 
-            throw new NotImplementedException();
+            var email = customer.Email;
+            customer.Pass_word = HashAndSalt.HashSalt(customer.Pass_word);
+            using (IDbConnection dbConnection = Connection)
+            {
+                string sQuery0 = "SELECT FirstName FROM Customer WHERE Email = @email";
+                dbConnection.Open();
+                String result = dbConnection.QueryFirstOrDefault<String>(sQuery0, new { @Email = email });
+                dbConnection.Close();
+
+                if (string.IsNullOrEmpty(result))
+                {
+                    string sQuery = "INSERT INTO Customer(FirstName,LastName,Pass_word,Email,MobileNo)" +
+                                    "VALUES(@FirstName,@LastName,@Pass_word,@Email,@MobileNo)";
+
+                    dbConnection.Open();
+                    dbConnection.Execute(sQuery, customer);
+                    return true;
+
+                }
+            }
+            return false;
         }
 
-        public bool LoginCustomer(Login login)
+        
+        public UserModel LoginCustomer(Login login)
         {
-            throw new NotImplementedException();
+            String checkUserName;
+            login.Pass_word = HashAndSalt.HashSalt(login.Pass_word);
+
+            var email = login.Email;
+            var password = login.Pass_word;
+
+            using (IDbConnection dbConnection = Connection)
+            {
+                string sQuery = "SELECT FirstName FROM Customer WHERE Email = @Email AND Pass_word = @Pass_word";
+                dbConnection.Open();
+                checkUserName = dbConnection.QueryFirstOrDefault<String>(sQuery, new { @Email = email, @Pass_word = password });
+
+
+            }
+
+            if (String.IsNullOrEmpty(checkUserName))
+            {
+                return null;
+            }
+            else
+            {
+                UserModel user = null;
+                user = new UserModel { Name = checkUserName, Email = email };
+                return user;
+                /* var method = typeof(TokenCreator).GetMethod("createToken");
+                 var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
+                 action(user);*/
+
+                //TokenCreator tokencreator = new TokenCreatorC();
+                //return tokencreator.createToken(user);
+            }
         }
 
 
