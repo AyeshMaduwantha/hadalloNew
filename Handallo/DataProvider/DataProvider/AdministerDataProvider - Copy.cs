@@ -22,7 +22,15 @@ namespace Handallo.DataProvider
             connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
-        public IDbConnection Connection
+        //public IDbConnection Connection
+        //{
+        //    get
+        //    {
+        //        return new SqlConnection(connectionString);
+        //    }
+        //}
+
+        public SqlConnection Connection
         {
             get
             {

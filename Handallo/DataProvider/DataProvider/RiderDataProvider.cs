@@ -19,7 +19,15 @@ namespace Handallo.DataProvider
             //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
-        public IDbConnection Connection
+        //public IDbConnection Connection
+        //{
+        //    get
+        //    {
+        //        return new SqlConnection(connectionString);
+        //    }
+        //}
+
+        public SqlConnection Connection
         {
             get
             {

@@ -23,7 +23,15 @@ namespace Handallo.DataProvider.DataProvider
 
         }
 
-        public IDbConnection Connection
+        //public IDbConnection Connection
+        //{
+        //    get
+        //    {
+        //        return new SqlConnection(connectionString);
+        //    }
+        //}
+
+        public SqlConnection Connection
         {
             get
             {
