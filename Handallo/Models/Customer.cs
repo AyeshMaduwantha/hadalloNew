@@ -15,5 +15,7 @@ namespace Handallo.Models
         public String Pass_word { get; set; }
         public String VerifiCode { get; set; }
         public Boolean Validated { get; set; }
+
+        public String vCode { get; set; }
     }
 }

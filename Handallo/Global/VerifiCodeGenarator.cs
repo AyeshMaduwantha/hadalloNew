@@ -8,7 +8,7 @@ namespace Handallo.Global
     public static class VerifiCodeGenarator
     {
 
-        private static string CreateRandomPassword()
+        public static string CreateRandomPassword()
         {
             string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789!@$?_-";
             char[] chars = new char[6];

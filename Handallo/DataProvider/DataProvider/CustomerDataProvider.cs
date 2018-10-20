@@ -19,9 +19,9 @@ namespace Handallo.DataProvider
 
         public CustomerDataProvider()
         {
-            connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
+            //connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
             //connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
-            //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
         //public IDbConnection Connection
@@ -54,7 +54,7 @@ namespace Handallo.DataProvider
 
         public bool RegisterCustomer(Customer customer)
         {
-
+            
             var email = customer.Email;
             customer.Pass_word = HashAndSalt.HashSalt(customer.Pass_word);
             using (IDbConnection dbConnection = Connection)
@@ -66,10 +66,13 @@ namespace Handallo.DataProvider
 
                 if (string.IsNullOrEmpty(result))
                 {
-                    string sQuery = "INSERT INTO Customer(FirstName,LastName,Pass_word,Email,MobileNo)" +
-                                    "VALUES(@FirstName,@LastName,@Pass_word,@Email,@MobileNo)";
+                    customer.VerifiCode = VerifiCodeGenarator.CreateRandomPassword();
+                    customer.Validated  = false;
+                    string sQuery = "INSERT INTO Customer(FirstName,LastName,Pass_word,Email,MobileNo,VerifiCode,Validated)" +
+                                    "VALUES(@FirstName,@LastName,@Pass_word,@Email,@MobileNo,@VerifiCode,@Validated)";
 
                     dbConnection.Open();
+                    //dbConnection.Execute(sQuery, new { customer.FirstName = FirstName , VerifiCode = vCode });
                     dbConnection.Execute(sQuery, customer);
                     return true;
 
