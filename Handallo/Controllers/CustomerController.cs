@@ -41,14 +41,9 @@ namespace Handallo.Controllers
 
         // POST api/values
         [HttpPost("register")]
-        public ActionResult Post([FromBody] Customer customer)
+        public Task<Boolean> Post([FromBody] Customer customer)
         {
-            if (_CustomerDataProvider.RegisterCustomer(customer))
-            {
-                return Ok();
-            }
-
-            return BadRequest();
+            return _CustomerDataProvider.RegisterCustomer(customer);
         }
 
         [HttpPost("login")]

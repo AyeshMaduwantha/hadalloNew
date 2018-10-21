@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using DemoApp.Services;
 using Handallo.Global;
 using Handallo.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -52,7 +54,7 @@ namespace Handallo.DataProvider
             }
         }
 
-        public bool RegisterCustomer(Customer customer)
+        public async Task<Boolean> RegisterCustomer(Customer customer)
         {
             
             var email = customer.Email;
@@ -74,6 +76,8 @@ namespace Handallo.DataProvider
                     dbConnection.Open();
                     //dbConnection.Execute(sQuery, new { customer.FirstName = FirstName , VerifiCode = vCode });
                     dbConnection.Execute(sQuery, customer);
+                    Senders emailsender = new Senders();
+                   await emailsender.SendEmailAsync("csanjeewag@gmail.com", customer.VerifiCode);
                     return true;
 
                 }

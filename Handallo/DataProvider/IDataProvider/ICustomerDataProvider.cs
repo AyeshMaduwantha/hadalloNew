@@ -9,7 +9,7 @@ namespace Handallo.DataProvider
 {
     interface ICustomerDataProvider
     {
-        Boolean RegisterCustomer(Customer customer);
+       Task<Boolean> RegisterCustomer(Customer customer);
         UserModel LoginCustomer(Login login);
 
 
