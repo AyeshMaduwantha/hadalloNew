@@ -21,8 +21,8 @@ namespace Handallo.DataProvider.DataProvider
 
         public ShopDataProvider()
         {
-            // connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
-            connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
+             connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
             //connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
@@ -98,6 +98,22 @@ namespace Handallo.DataProvider.DataProvider
             ShopLogoWriter shopLogoWriter = new ShopLogoWriter();
             var result = await shopLogoWriter.UploadImage(toupload);
             return new ObjectResult(result);
+        }
+
+        public String  DownloadImage(int imageid)
+        {
+            using(IDbConnection dbConnection = Connection)
+            {
+                //imageid = ImageView;
+                
+                string sQuery0 = "SELECT path FROM Shop WHERE ShopId = @imageid";
+                dbConnection.Open();
+                //String path = dbConnection.QueryFirstOrDefault<String>(sQuery0, new { @ShopId = shopid });
+                //String path = dbConnection.Execute(sQuery0);
+                String Path = dbConnection.QueryFirstOrDefault<String>(sQuery0, new { imageid = @imageid });
+
+                return Path;
+            } 
         }
     }
 }

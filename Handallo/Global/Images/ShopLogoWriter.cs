@@ -19,8 +19,8 @@ namespace Handallo.Global.Images
 
         public ShopLogoWriter()
         {
-           // connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
-            connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
+            connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
         }
 
         public SqlConnection Connection
@@ -88,7 +88,10 @@ namespace Handallo.Global.Images
 
             using (IDbConnection dbConnection = Connection)
             {
+                string url = "https://localhost:44371/api/Shop/download/" + ShopId;
                 string sQuery = "UPDATE shop SET path = @path WHERE ShopId = @ShopId ;"; //update product set CategoriesId = 2 where Categories = 'ab'
+                string sQuery1 = "UPDATE shop SET url = @url WHERE ShopId = @ShopId ;";
+
                 //SqlCommand cmd = new SqlCommand(sQuery, Connection);
                 //cmd.Parameters.Add("fileName", sqlDbType: SqlDbType.NVarChar).Value = fileName;
                 //cmd.Parameters.Add("path", sqlDbType: SqlDbType.NVarChar).Value = path;
@@ -97,6 +100,7 @@ namespace Handallo.Global.Images
 
                 dbConnection.Open();
                 dbConnection.Execute(sQuery, new {path = path,ShopId = ShopId});
+                dbConnection.Execute(sQuery1, new { url = url, ShopId = ShopId });
             }
 
 
