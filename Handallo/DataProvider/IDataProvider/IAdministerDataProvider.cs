@@ -10,7 +10,7 @@ namespace Handallo.DataProvider
     {
         Administer GetAdminister(int RiderId);
         Boolean RegisterAdmin(Administer administer);
-        Boolean LoginAdmin(Login login);
+        UserModel LoginAdmin(Login login);
 
 
 

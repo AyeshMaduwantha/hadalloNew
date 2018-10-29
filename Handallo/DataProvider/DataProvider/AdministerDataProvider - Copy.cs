@@ -17,9 +17,9 @@ namespace Handallo.DataProvider
 
         public AdministerDataProvider()
         {
-            // connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+             //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
             connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
-           // connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
+           //// connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
         //public IDbConnection Connection
@@ -75,31 +75,43 @@ namespace Handallo.DataProvider
             }
             return false;
         }
-        public bool LoginAdmin(Login login)
+        public UserModel LoginAdmin(Login login)
         {
+            String checkUserName;
             login.Pass_word = HashAndSalt.HashSalt(login.Pass_word);
 
-            var o = login.Email;
-            var i = login.Pass_word;
+            var email = login.Email;
+            var password = login.Pass_word;
 
             using (IDbConnection dbConnection = Connection)
             {
                 string sQuery = "SELECT FirstName FROM Administer WHERE Email = @Email AND Pass_word = @Pass_word";
                 dbConnection.Open();
-                checkExist = dbConnection.QueryFirstOrDefault<String>(sQuery, new { @Email = o, @Pass_word = i });
+                checkUserName = dbConnection.QueryFirstOrDefault<String>(sQuery, new { @Email = email, @Pass_word = password });
 
 
             }
 
-            if (String.IsNullOrEmpty(this.checkExist))
+            if (String.IsNullOrEmpty(checkUserName))
             {
-                return false;
+                return null;
             }
             else
             {
-                return true;
+                UserModel user = null;
+                user = new UserModel { Name = checkUserName, Email = email };
+                return user;
+                /* var method = typeof(TokenCreator).GetMethod("createToken");
+                 var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
+                 action(user);*/
+
+                //TokenCreator tokencreator = new TokenCreatorC();
+                //return tokencreator.createToken(user);
             }
+
         }
+
+        //Administer
 
 
     }
