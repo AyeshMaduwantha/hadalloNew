@@ -23,7 +23,7 @@ namespace Handallo.DataProvider.DataProvider
         {
              //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
             connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
-            //connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
+            ////connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
 
@@ -72,8 +72,8 @@ namespace Handallo.DataProvider.DataProvider
 
                 if (string.IsNullOrEmpty(result))
                 {
-                    string sQuery = "INSERT INTO Shop(ShopName,Des_cription,Email,MobileNo,Lo_cation)" +
-                                    "VALUES(@ShopName,@Des_cription,@Email,@MobileNo,@Lo_cation)";
+                    string sQuery = "INSERT INTO Shop(ShopName,Des_cription,Email,MobileNo,Lo_cation,OwnerId)" +
+                                    "VALUES(@ShopName,@Des_cription,@Email,@MobileNo,@Lo_cation,@OwnerId)";
 
                     dbConnection.Open();
                     dbConnection.Execute(sQuery, shop);

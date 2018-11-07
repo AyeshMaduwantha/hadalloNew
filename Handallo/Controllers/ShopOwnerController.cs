@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Handallo.DataProvider;
 using Handallo.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Handallo.Controllers
 {
@@ -14,10 +19,14 @@ namespace Handallo.Controllers
     public class ShopOwnerController : ControllerBase
     {
         public readonly ShopOwnerDataProvider _ShopOwnerDataProvider;
+        private IConfiguration _config;
+        UserModel result;
 
-        public ShopOwnerController()
+
+        public ShopOwnerController(IConfiguration config)
         {
             _ShopOwnerDataProvider = new ShopOwnerDataProvider();
+            _config = config;
         }
      /*   // GET: api/ShopOwner
         [HttpGet]
@@ -34,25 +43,32 @@ namespace Handallo.Controllers
         }*/
 
         [HttpPost("register")]
-        public Boolean Post([FromBody] ShopOwner shopowner)
+        public IActionResult Post([FromBody] ShopOwner shopowner)
         {
-            if (_ShopOwnerDataProvider.RegisterShopOwner(shopowner))
+            result = _ShopOwnerDataProvider.RegisterShopOwner(shopowner);
+            if (result == null)
             {
-                return true;
+                return new BadRequestResult();
             }
 
-            return false;
+            String token = (BuildToken(result));
+            return new OkObjectResult(new { token = token });
         }
 
         [HttpPost("login")]
-        public Boolean Post([FromBody] Login login)
+        public IActionResult Post([FromBody] Login login)
         {
-            if (_ShopOwnerDataProvider.LoginShopOwner(login))
+
+             result = _ShopOwnerDataProvider.LoginShopOwner(login);
+            if (result == null)
             {
-                return true;
+                return new BadRequestResult();
             }
 
-            return false;
+            String token = (BuildToken(result));
+            return new OkObjectResult(new { token = token });
+
+
         }
 
         /*    // PUT: api/ShopOwner/5
@@ -66,5 +82,26 @@ namespace Handallo.Controllers
             public void Delete(int id)
             {
             } */
+
+        private string BuildToken(UserModel user)
+        {
+            var claims = new[] {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Name),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+            //return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }

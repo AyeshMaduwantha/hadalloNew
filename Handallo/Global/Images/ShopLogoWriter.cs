@@ -19,7 +19,7 @@ namespace Handallo.Global.Images
 
         public ShopLogoWriter()
         {
-            //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+           // connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
             connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
         }
 
@@ -88,7 +88,7 @@ namespace Handallo.Global.Images
 
             using (IDbConnection dbConnection = Connection)
             {
-                string url = "https://localhost:44371/api/Shop/download/" + ShopId;
+                string url = "https://handallo.azurewebsites.net/api/Shop/download/" + ShopId;
                 string sQuery = "UPDATE shop SET path = @path WHERE ShopId = @ShopId ;"; //update product set CategoriesId = 2 where Categories = 'ab'
                 string sQuery1 = "UPDATE shop SET url = @url WHERE ShopId = @ShopId ;";
 

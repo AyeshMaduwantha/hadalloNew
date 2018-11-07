@@ -8,6 +8,7 @@ namespace Handallo.Models
 {
     public class Shop
     {
+        public int OwnerId { get; set; }
         public String ShopName { get; set; }
         public String Des_cription { get; set; }
         public String Email { get; set; }

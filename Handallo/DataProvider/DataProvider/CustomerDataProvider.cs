@@ -21,9 +21,9 @@ namespace Handallo.DataProvider
 
         public CustomerDataProvider()
         {
-            connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
+            //connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
             ////connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
-            //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
         //public IDbConnection Connection
@@ -77,7 +77,8 @@ namespace Handallo.DataProvider
                     //dbConnection.Execute(sQuery, new { customer.FirstName = FirstName , VerifiCode = vCode });
                     dbConnection.Execute(sQuery, customer);
                     Senders emailsender = new Senders();
-                   await emailsender.SendEmailAsync("csanjeewag@gmail.com", customer.VerifiCode);
+                   //await emailsender.SendEmailAsync("csanjeewag@gmail.com", customer.VerifiCode);
+                    await emailsender.SendEmail("heshan.jayarathna05@gmail.com","VerifiCode");
                     return true;
 
                 }

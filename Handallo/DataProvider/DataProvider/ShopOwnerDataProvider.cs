@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using DemoApp.Services;
 using Handallo.Global;
 using Handallo.Models;
 
@@ -13,13 +14,13 @@ namespace Handallo.DataProvider
     public class ShopOwnerDataProvider : IShopOwnerDataProvider
     {
         private readonly String connectionString;
-        private String checkExist;
+    
 
         public ShopOwnerDataProvider()
         {
-            // connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+             //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
             connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
-            //connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
+            ////connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
         //public IDbConnection Connection
@@ -38,33 +39,42 @@ namespace Handallo.DataProvider
             }
         }
 
-        public bool LoginShopOwner(Login login)
+        public UserModel LoginShopOwner(Login login)
         {
+            String checkUserName;
             login.Pass_word = HashAndSalt.HashSalt(login.Pass_word);
 
-            var o = login.Email;
-            var i = login.Pass_word;
+            var email = login.Email;
+            var password = login.Pass_word;
 
             using (IDbConnection dbConnection = Connection)
             {
                 string sQuery = "SELECT FirstName FROM ShopOwner WHERE Email = @Email AND Pass_word = @Pass_word";
                 dbConnection.Open();
-                checkExist = dbConnection.QueryFirstOrDefault<String>(sQuery, new { @Email = o, @Pass_word = i });
+                checkUserName = dbConnection.QueryFirstOrDefault<String>(sQuery, new { @Email = email, @Pass_word = password });
 
 
             }
 
-            if (String.IsNullOrEmpty(this.checkExist))
+            if (String.IsNullOrEmpty(checkUserName))
             {
-                return false;
+                return null;
             }
             else
             {
-                return true;
+                UserModel user = null;
+                user = new UserModel { Name = checkUserName, Email = email };
+                return user;
+                /* var method = typeof(TokenCreator).GetMethod("createToken");
+                 var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
+                 action(user);*/
+
+                //TokenCreator tokencreator = new TokenCreatorC();
+                //return tokencreator.createToken(user);
             }
         }
 
-        public bool RegisterShopOwner(ShopOwner shopowner)
+        public UserModel RegisterShopOwner(ShopOwner shopowner)
         {
             var email = shopowner.Email;
             shopowner.Pass_word = HashAndSalt.HashSalt(shopowner.Pass_word);
@@ -77,16 +87,46 @@ namespace Handallo.DataProvider
 
                 if (string.IsNullOrEmpty(result))
                 {
-                    string sQuery = "INSERT INTO ShopOwner(FirstName,LastName,Pass_word,Email,MobileNo)" +
-                                    "VALUES(@FirstName,@LastName,@Pass_word,@Email,@MobileNo)";
+                    String VerifiCode = VerifiCodeGenarator.CreateRandomPassword();
+                    shopowner.VerifiCode = VerifiCode;
+                    shopowner.Validated = false;
+                    string sQuery = "INSERT INTO ShopOwner(FirstName,LastName,Pass_word,Email,MobileNo,VerifiCode,Validated)" +
+                                    "VALUES(@FirstName,@LastName,@Pass_word,@Email,@MobileNo,@VerifiCode,@Validated)";
 
                     dbConnection.Open();
                     dbConnection.Execute(sQuery, shopowner);
-                    return true;
+                    dbConnection.Close();
+                               
+                    SendMail(email,VerifiCode);
+
+                    string sQuery1 = "SELECT ShopOwnerId from ShopOwner where Email = @email";
+                    string ID = dbConnection.QueryFirstOrDefault<String>(sQuery1, new { @Email = email });
+                    
+                    UserModel user = null;
+                    user = new UserModel { Id = ID, Name = shopowner.FirstName, Email = shopowner.Email };
+                    return user;
+
 
                 }
+
+                return null;
             }
-            return false;
+
+
+            async void SendMail(String mail,string VerifiCode)
+            {
+
+                Senders emailsender = new Senders();
+                await emailsender.SendEmail(mail, VerifiCode);
+
+            }
+                /* var method = typeof(TokenCreator).GetMethod("createToken");
+                 var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
+                 action(user);*/
+
+                //TokenCreator tokencreator = new TokenCreatorC();
+                //return tokencreator.createToken(user);
+            
         }
     }
 

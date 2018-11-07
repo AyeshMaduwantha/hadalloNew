@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Handallo.Global.VerificationService;
 using MimeKit;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace DemoApp.Services
 {
@@ -21,7 +24,7 @@ namespace DemoApp.Services
             {
                 MailMessage mail = new MailMessage();
                 mail.To.Add(email);
-                mail.From = new MailAddress("dulangah2@gmail.com");
+                mail.From = new MailAddress("dulang@gmail.com");
                 mail.Subject = "Confirmation of Registration from handallo.";
                 string Body = message;
                 mail.Body = Body;
@@ -30,7 +33,7 @@ namespace DemoApp.Services
                 // smtp.Host = "smtp.gmail.com"; //Or Your SMTP Server Address
                 smtp.UseDefaultCredentials = false;
                 smtp.EnableSsl = true;
-                smtp.Credentials = new System.Net.NetworkCredential("///////////", "/////");
+                smtp.Credentials = new System.Net.NetworkCredential("dulangah2@gmail.com", "Dh.0772646981");
                 // smtp.Port = 587;
                 //Or your Smtp Email ID and Password
                 smtp.Send(mail);
@@ -43,6 +46,20 @@ namespace DemoApp.Services
             {
                 throw ex;
             }
+
+
+        }
+
+
+        public async Task SendEmail(string email, string subject)
+        {
+            var apiKey = System.Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            var client = new SendGridClient("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");
+            var from = new EmailAddress("dulangah2@gmail.com", "Support");
+            var to = new EmailAddress(email);
+            var plainTextContent = "sda";
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent,subject);
+            var response = await client.SendEmailAsync(msg);
         }
 
 

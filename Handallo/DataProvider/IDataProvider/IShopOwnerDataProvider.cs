@@ -9,8 +9,8 @@ namespace Handallo.DataProvider
     interface IShopOwnerDataProvider
     {
 
-        Boolean RegisterShopOwner(ShopOwner shopowner);
-        Boolean LoginShopOwner(Login login);
+        UserModel RegisterShopOwner(ShopOwner shopowner);
+        UserModel LoginShopOwner(Login login);
 
     }
 }
