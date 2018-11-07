@@ -37,7 +37,7 @@ namespace Handallo.DataProvider.DataProvider
 
         public String AddFoodItems()
         {
-            if (true)
+            if (false)
             {
                 return "ok";
             }
