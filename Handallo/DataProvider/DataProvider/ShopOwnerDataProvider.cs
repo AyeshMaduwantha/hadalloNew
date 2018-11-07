@@ -18,8 +18,8 @@ namespace Handallo.DataProvider
 
         public ShopOwnerDataProvider()
         {
-             //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
-            connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
+             connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
             ////connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
@@ -54,22 +54,27 @@ namespace Handallo.DataProvider
                 checkUserName = dbConnection.QueryFirstOrDefault<String>(sQuery, new { @Email = email, @Pass_word = password });
 
 
-            }
+            
 
-            if (String.IsNullOrEmpty(checkUserName))
-            {
-                return null;
-            }
-            else
-            {
-                UserModel user = null;
-                user = new UserModel { Name = checkUserName, Email = email };
-                return user;
-                /* var method = typeof(TokenCreator).GetMethod("createToken");
-                 var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
-                 action(user);*/
+                if (String.IsNullOrEmpty(checkUserName))
+                {
+                    return null;
+                }
+                else
+                {
+                    string sQuery1 = "SELECT ShopOwnerId from ShopOwner where Email = @email";
+                    string ID = dbConnection.QueryFirstOrDefault<String>(sQuery1, new {@Email = email});
 
-                //TokenCreator tokencreator = new TokenCreatorC();
+                    UserModel user = null;
+                    user = new UserModel {Id = ID, Name = checkUserName, Email = email};
+                    return user;
+
+                    /* var method = typeof(TokenCreator).GetMethod("createToken");
+                     var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
+                     action(user);*/
+
+                } //TokenCreator tokencreator = new TokenCreatorC();
+
                 //return tokencreator.createToken(user);
             }
         }
