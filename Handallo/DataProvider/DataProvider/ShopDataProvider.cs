@@ -88,9 +88,12 @@ namespace Handallo.DataProvider.DataProvider
 
 
                 }
+                return new BadRequestResult();
+
+
             }
 
-            return new BadRequestResult();
+            
         }
 
         public async Task<IActionResult> UploadImage(Image toupload)
@@ -114,6 +117,21 @@ namespace Handallo.DataProvider.DataProvider
 
                 return Path;
             } 
+        }
+
+        public dynamic GetFoodItems(int ShopId)
+        {
+            using (IDbConnection dbConnection = Connection)
+            {
+                string sQuery = "SELECT * FROM FoodItem WHERE FoodItemId IN " +
+                                "(SELECT FoodItemId FROM ShopHasFoodItem WHERE ShopId = @ShopID)";
+
+                dbConnection.Open();
+
+                return dbConnection.Query(sQuery, new {ShopId = ShopId} );
+
+            }
+
         }
     }
 }

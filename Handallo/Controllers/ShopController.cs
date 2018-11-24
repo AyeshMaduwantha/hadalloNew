@@ -18,10 +18,12 @@ namespace Handallo.Controllers
     {
 
         public readonly ShopDataProvider _ShopDataProvider;
+        public readonly FoodItemDataProvider _FoodItemDataProvider;
 
         public ShopController()
         {
             _ShopDataProvider = new ShopDataProvider();
+            _FoodItemDataProvider = new FoodItemDataProvider();
         }
         // GET: api/Shop
         [HttpGet, Authorize]
@@ -49,18 +51,44 @@ namespace Handallo.Controllers
         [Route("download/{id:int}")]
         public Task<IActionResult> Getfiles(int id)
         {
-
+            
             String path = _ShopDataProvider.DownloadImage(id);
             return Download(path);
 
         }
 
-       /* [HttpPost("logo")]
-        public async Task<IActionResult> UploadImage(Shop shop)
+        [HttpGet]
+        [Route("fooditems/{ShopId:int}")]
+        public dynamic Getfooditems(int ShopId)
         {
-            return await _ShopDataProvider.RegisterShop(shop);
+
+            return _ShopDataProvider.GetFoodItems(ShopId);
+            //return Download(path);
+
         }
-        */
+
+        [Route("downloadfooditem/{id:int}")]
+        public Task<IActionResult> GetFoodItemImage(int id)
+        {
+
+            String path = _FoodItemDataProvider.DownloadFoodItemImage(id);
+            return Download(path);
+
+        }
+
+        /* [HttpPost("logo")]
+         public async Task<IActionResult> UploadImage(Shop shop)
+         {
+             return await _ShopDataProvider.RegisterShop(shop);
+         }
+         */
+
+        [HttpPost("AddFoodItems")]
+        public Task <IActionResult> AddFoodItems([FromForm]FoodItem fooditem)
+        {
+             return  _FoodItemDataProvider.AddFoodItems(fooditem);
+        }  
+ 
 
 
         public async Task<IActionResult> Download(string path)
@@ -96,6 +124,7 @@ namespace Handallo.Controllers
                 {".jpg", "image/jpeg"},
                 {".jpeg", "image/jpeg"},
                 {".gif", "image/gif"},
+                {".jfif","image/jfif" },
                 {".csv", "text/csv"}
             };
         }

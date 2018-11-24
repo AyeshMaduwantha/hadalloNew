@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -10,6 +11,8 @@ namespace Handallo.Models
     {
         public String path { get; set; }
         public long ShopId { get; set; }
+        
+        public int FoodItemId { get; set; }
 
         public IFormFile image { get; set; }
 
@@ -27,5 +30,8 @@ namespace Handallo.Models
             this.image = image;
             this.ShopId = ShopId;
         }
+
+
+
     }
 }

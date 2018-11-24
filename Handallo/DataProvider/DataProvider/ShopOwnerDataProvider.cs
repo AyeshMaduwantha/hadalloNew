@@ -2,25 +2,33 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using DemoApp.Services;
 using Handallo.Global;
 using Handallo.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Handallo.DataProvider
 {
     public class ShopOwnerDataProvider : IShopOwnerDataProvider
     {
         private readonly String connectionString;
-    
+       // private IConfiguration _config;
 
         public ShopOwnerDataProvider()
         {
-             //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            // connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
             connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
             /////connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
+
+            //this._config = config;
         }
 
         //public IDbConnection Connection
@@ -39,7 +47,7 @@ namespace Handallo.DataProvider
             }
         }
 
-        public UserModel LoginShopOwner(Login login)
+        public ShopUserModel LoginShopOwner(Login login)
         {
             String checkUserName;
             login.Pass_word = HashAndSalt.HashSalt(login.Pass_word);
@@ -62,13 +70,38 @@ namespace Handallo.DataProvider
                 }
                 else
                 {
+                    string OwnerID;
                     string sQuery1 = "SELECT ShopOwnerId from ShopOwner where Email = @email";
-                    string ID = dbConnection.QueryFirstOrDefault<String>(sQuery1, new {@Email = email});
+                    OwnerID = dbConnection.QueryFirstOrDefault<String>(sQuery1, new { @Email = email });
+                    string sQuery2 = "SELECT * FROM Shop WHERE OwnerId = @OwnerID";
+                    try
+                    {
+                        dynamic shop = dbConnection.QueryFirst(sQuery2, new {OwnerId = OwnerID});
 
-                    UserModel user = null;
-                    user = new UserModel {Id = ID, Name = checkUserName, Email = email};
-                    return user;
 
+
+
+                        ShopUserModel shopuser = null;
+                        shopuser = new ShopUserModel
+                        {
+                            ShopId = shop.ShopId,
+                            UId = OwnerID,
+                            Name = checkUserName,
+                            Email = email,
+                            Description = shop.Des_cription,
+                            Location = shop.Lo_cation,
+                            ShopName = shop.ShopName,
+                            Url = shop.url
+                        };
+
+                        return shopuser;
+//                        String Token = BuildShopUserToken(shopuser);
+//                        return new OkObjectResult(new { token = Token });
+                    }
+                    catch (Exception e)
+                    {
+                        return null;
+                    }
                     /* var method = typeof(TokenCreator).GetMethod("createToken");
                      var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
                      action(user);*/
@@ -78,6 +111,9 @@ namespace Handallo.DataProvider
                 //return tokencreator.createToken(user);
             }
         }
+
+       
+
 
         public UserModel RegisterShopOwner(ShopOwner shopowner)
         {
@@ -109,30 +145,38 @@ namespace Handallo.DataProvider
                     
                     UserModel user = null;
                     user = new UserModel { Id = ID, Name = shopowner.FirstName, Email = shopowner.Email };
+                    //String Token = BuildToken(user);
+                    //return new OkObjectResult(new { token = Token });
                     return user;
 
 
                 }
 
                 return null;
-            }
+            }            
+            /* var method = typeof(TokenCreator).GetMethod("createToken");
+             var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
+             action(user);*/
 
+            //TokenCreator tokencreator = new TokenCreatorC();
+            //return tokencreator.createToken(user);
 
-            async void SendMail(String mail,string VerifiCode)
-            {
+           
 
-                Senders emailsender = new Senders();
-                await emailsender.SendEmail(mail, VerifiCode);
-
-            }
-                /* var method = typeof(TokenCreator).GetMethod("createToken");
-                 var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
-                 action(user);*/
-
-                //TokenCreator tokencreator = new TokenCreatorC();
-                //return tokencreator.createToken(user);
-            
         }
+
+        
+
+        async void SendMail(String mail, string VerifiCode)
+        {
+
+            Senders emailsender = new Senders();
+            await emailsender.SendEmail(mail, VerifiCode);
+
+        }
+
+        
+
     }
 
 }

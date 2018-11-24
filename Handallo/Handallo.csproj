@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\FoodItem\" />
     <Folder Include="wwwroot\Shops\" />
   </ItemGroup>
 
