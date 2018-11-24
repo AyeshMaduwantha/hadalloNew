@@ -77,7 +77,7 @@ namespace Handallo.Controllers
         }
 
         /* [HttpPost("logo")]
-         public async Task<IActionResult> UploadImage(Shop shop)
+         public async Task<IActionResult> UploadImage(Shop shop) 
          {
              return await _ShopDataProvider.RegisterShop(shop);
          }
