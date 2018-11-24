@@ -111,29 +111,37 @@ namespace Handallo.Controllers
 
         private string BuildShopUserToken(ShopUserModel shopuser)
         {
-            var claims = new[] {
-                new Claim(JwtRegisteredClaimNames.Sub, shopuser.Name),
-                new Claim(JwtRegisteredClaimNames.Email, shopuser.Email),
-                new Claim(JwtRegisteredClaimNames.NameId, shopuser.UId),
-                new Claim(JwtRegisteredClaimNames.Aud, shopuser.Location),
-                new Claim(JwtRegisteredClaimNames.Acr, shopuser.Url),
-                new Claim(JwtRegisteredClaimNames.Actort, shopuser.ShopName),
-                new Claim(JwtRegisteredClaimNames.Azp, shopuser.ShopId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Amr, shopuser.Description),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            try
+            {
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, shopuser.Name),
+                    new Claim(JwtRegisteredClaimNames.Email, shopuser.Email),
+                    new Claim(JwtRegisteredClaimNames.NameId, shopuser.UId),
+                    new Claim(JwtRegisteredClaimNames.Aud, shopuser.Location),
+                    new Claim(JwtRegisteredClaimNames.Acr, shopuser.Url),
+                    new Claim(JwtRegisteredClaimNames.Actort, shopuser.ShopName),
+                    new Claim(JwtRegisteredClaimNames.Azp, shopuser.ShopId.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Amr, shopuser.Description),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                };
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Issuer"],
-                claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
+                var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+                    _config["Jwt:Issuer"],
+                    claims,
+                    expires: DateTime.Now.AddMinutes(30),
+                    signingCredentials: creds);
 
-            //token = new JwtSecurityToken();
-            return new JwtSecurityTokenHandler().WriteToken(token);
-            //return new JwtSecurityTokenHandler().WriteToken(token);
+                //token = new JwtSecurityToken();
+                return new JwtSecurityTokenHandler().WriteToken(token);
+                //return new JwtSecurityTokenHandler().WriteToken(token);
+            }
+            catch (Exception e)
+            {
+                return e.ToString();
+            }
         }
 
 
