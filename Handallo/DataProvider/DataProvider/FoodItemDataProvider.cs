@@ -55,6 +55,8 @@ namespace Handallo.DataProvider.DataProvider
 
                 string sQuery2 = "INSERT INTO FoodItemHasPrices(FoodItemId,SmallUnitPrice,MediumUnitPrice,LargeUnitPrice) " +
                                  "VALUES(@FoodItemId,@SmallUnitPrice,@MediumUnitPrice,@LargeUnitPrice)";
+                string sQuery3 = "INSERT INTO FoodItemHasType(FoodItemId,IsVegi,IsNonVegi,IsRice,IsBeverage)" +
+                                 "VALUES(@FoodItemId,@IsVegi,@IsNonVegi,@IsRice,@IsBeverage)";
 
                 //dbConnection.Open();
                 //dbConnection.Execute(sQuery, fooditem);
@@ -86,6 +88,17 @@ namespace Handallo.DataProvider.DataProvider
                     MediumUnitPrice = fooditem.MediumUnitPrice,
                     LargeUnitPrice = fooditem.LargeUnitPrice
                       });
+                dbConnection.Close();
+                dbConnection.Open();
+                dbConnection.Execute(sQuery3, 
+                    new
+                    {
+                        FoodItemId = number,
+                        IsVegi = fooditem.IsVegi,
+                        IsNonVegi = fooditem.IsNonVegi,
+                        IsRice = fooditem.IsRice,
+                        IsBeverage = fooditem.IsBeverage
+                    });
                 //int result2 = dbConnection.ExecuteScalar<int>(sQuery);
 
                 Image toupload = new Image(fooditem.Image, number);

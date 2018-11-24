@@ -25,5 +25,10 @@ namespace Handallo.Models
         public Boolean Availability { get; set; }
         public IFormFile Image { get; set; }
 
+        public Boolean IsVegi { get; set; }
+        public Boolean IsNonVegi { get; set; }
+        public Boolean IsRice { get; set; }
+        public Boolean IsBeverage { get; set; }
+
     }
 }
