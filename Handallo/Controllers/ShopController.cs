@@ -59,10 +59,11 @@ namespace Handallo.Controllers
 
         [HttpGet]
         [Route("fooditems/{ShopId:int}")]
-        public dynamic Getfooditems(int ShopId)
+        public IActionResult Getfooditems(int ShopId)
         {
 
-            return _ShopDataProvider.GetFoodItems(ShopId);
+            //return _ShopDataProvider.GetFoodItems(ShopId);
+            return new JsonResult(_ShopDataProvider.GetFoodItems(ShopId));
             //return Download(path);
 
         }

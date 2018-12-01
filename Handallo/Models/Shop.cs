@@ -14,6 +14,8 @@ namespace Handallo.Models
         public String Email { get; set; }
         public String MobileNo { get; set; }
         public String Lo_cation { get; set; }
+        public String Lat { get; set; }
+        public String Lng { get; set; }
 
         public IFormFile image { get; set; }
 
