@@ -26,10 +26,11 @@ namespace Handallo.Controllers
             _FoodItemDataProvider = new FoodItemDataProvider();
         }
         // GET: api/Shop
+        // GET: api/Shop
         [HttpGet, Authorize]
-        public dynamic Get()
+        public IActionResult Get()
         {
-            return _ShopDataProvider.viewShops();
+            return new JsonResult(_ShopDataProvider.viewShops());
         }
 
         // GET: api/Shop/5

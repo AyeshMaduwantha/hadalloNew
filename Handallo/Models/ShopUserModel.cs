@@ -21,5 +21,8 @@ namespace Handallo.Models
         public string Location { get; set; }
 
         public string Url { get; set; }
+
+        public String Lat { get; set; }
+        public String Lng { get; set; }
     }
 }

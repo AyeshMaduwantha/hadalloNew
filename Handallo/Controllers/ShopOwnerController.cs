@@ -123,7 +123,10 @@ namespace Handallo.Controllers
                     new Claim(JwtRegisteredClaimNames.Actort, shopuser.ShopName),
                     new Claim(JwtRegisteredClaimNames.Azp, shopuser.ShopId.ToString()),
                     new Claim(JwtRegisteredClaimNames.Amr, shopuser.Description),
+                    new Claim(JwtRegisteredClaimNames.AtHash, shopuser.Lat),
+                    new Claim(JwtRegisteredClaimNames.CHash, shopuser.Lng),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+
                 };
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

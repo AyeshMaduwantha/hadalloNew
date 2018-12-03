@@ -91,7 +91,9 @@ namespace Handallo.DataProvider
                             Description = shop.Des_cription,
                             Location = shop.Lo_cation,
                             ShopName = shop.ShopName,
-                            Url = shop.url
+                            Url = shop.url,
+                            Lat = shop.Lat,
+                            Lng =shop.Lng,
                         };
 
                         return shopuser;

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Handallo.Models
 {
     public class Rider
     {
-        public int CustomerId { get; set; }
+        public int RiderId { get; set; }
         public String FirstName { get; set; }
         public String LastName { get; set; }
         public String Email { get; set; }
@@ -17,6 +18,7 @@ namespace Handallo.Models
         public Boolean Validated { get; set; }
         public String LicenseNo { get; set; }
         public String Nic { get; set; }
+        public IFormFile image { get; set; }
 
 
     }

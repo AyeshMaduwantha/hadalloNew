@@ -6,7 +6,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Handallo.DataProvider;
+using Handallo.DataProvider.DataProvider;
 using Handallo.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,10 +23,14 @@ namespace Handallo.Controllers
     public class AdministerController : ControllerBase
     {
         public readonly AdministerDataProvider __AdministerDataProvider;
+        public readonly ShopDataProvider _ShopDataProvider;
+        public readonly RiderDataProvider _RiderDataProvider;
         private IConfiguration _config;
         UserModel result;
         public AdministerController(IConfiguration config)
         {
+            _RiderDataProvider = new RiderDataProvider();
+            _ShopDataProvider = new ShopDataProvider();
             __AdministerDataProvider = new AdministerDataProvider();
             _config = config;
         }
@@ -68,6 +74,25 @@ namespace Handallo.Controllers
             String token = (BuildToken(result));
             return new OkObjectResult(new { token = token });
         }
+
+        // GET: api/Shop
+        [HttpGet]
+        [HttpGet("viewshops")]
+        public IActionResult viewshops()
+        {
+            return new JsonResult(_ShopDataProvider.viewShops());
+        }
+
+        [HttpGet, Authorize]
+        [HttpGet("viewriders")]
+        public IActionResult viewriders()
+        {
+            return new JsonResult(_RiderDataProvider.viewRiders());
+        }
+
+
+
+
 
         private string BuildToken(UserModel user)
         {
