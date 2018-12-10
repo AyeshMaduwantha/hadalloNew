@@ -113,7 +113,7 @@ namespace Handallo.DataProvider
 
         }
 
-        public dynamic viewRiders()
+        public dynamic ViewRiders()
         {
             using (IDbConnection dbConnection = Connection)
             {

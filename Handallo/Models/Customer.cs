@@ -16,6 +16,10 @@ namespace Handallo.Models
         public String VerifiCode { get; set; }
         public Boolean Validated { get; set; }
 
+        public String Address { get; set; }
+
+        public String CurrentLat { get; set; }
+        public String CurrentLng { get; set; }
         public String vCode { get; set; }
     }
 }

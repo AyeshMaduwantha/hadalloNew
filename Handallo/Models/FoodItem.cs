@@ -29,6 +29,9 @@ namespace Handallo.Models
         public Boolean IsNonVegi { get; set; }
         public Boolean IsRice { get; set; }
         public Boolean IsBeverage { get; set; }
+        public Boolean IsSmallPotion { get; set; }
+        public Boolean IsMediumPotion { get; set; }
+        public Boolean IsLargePotion { get; set; }
 
     }
 }

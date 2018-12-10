@@ -24,6 +24,7 @@ namespace Handallo.Controllers
     {
         public readonly AdministerDataProvider __AdministerDataProvider;
         public readonly ShopDataProvider _ShopDataProvider;
+        public readonly OrderDataProvider _OrderDataProvider;
         public readonly RiderDataProvider _RiderDataProvider;
         private IConfiguration _config;
         UserModel result;
@@ -32,6 +33,7 @@ namespace Handallo.Controllers
             _RiderDataProvider = new RiderDataProvider();
             _ShopDataProvider = new ShopDataProvider();
             __AdministerDataProvider = new AdministerDataProvider();
+            _OrderDataProvider = new OrderDataProvider();
             _config = config;
         }
         // GET: api/Adminster
@@ -72,6 +74,7 @@ namespace Handallo.Controllers
             }
 
             String token = (BuildToken(result));
+            
             return new OkObjectResult(new { token = token });
         }
 
@@ -80,14 +83,28 @@ namespace Handallo.Controllers
         [HttpGet("viewshops")]
         public IActionResult viewshops()
         {
-            return new JsonResult(_ShopDataProvider.viewShops());
+            return new JsonResult(_ShopDataProvider.ViewShops());
         }
 
-        [HttpGet, Authorize]
+        [HttpGet]
         [HttpGet("viewriders")]
-        public IActionResult viewriders()
+        public IActionResult Viewriders()
         {
-            return new JsonResult(_RiderDataProvider.viewRiders());
+            return new JsonResult(_RiderDataProvider.ViewRiders());
+        }
+
+        [HttpGet]
+        [HttpGet("vieworders")]
+        public IActionResult Vieworders()
+        {
+            return new JsonResult(_OrderDataProvider.ViewOrders());
+        }
+
+        [HttpPost]
+        [HttpGet("approveorder")]
+        public IActionResult Approveorder(SingleOrder order)
+        {
+            return new JsonResult(_OrderDataProvider.ApproveOrder(order));
         }
 
 

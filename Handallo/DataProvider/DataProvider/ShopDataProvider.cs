@@ -44,7 +44,7 @@ namespace Handallo.DataProvider.DataProvider
             }
         }
 
-        public dynamic viewShops()
+        public dynamic ViewShops()
         {
             using (IDbConnection dbConnection = Connection)
             {

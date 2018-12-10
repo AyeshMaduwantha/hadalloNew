@@ -30,7 +30,7 @@ namespace Handallo.Controllers
         [HttpGet, Authorize]
         public IActionResult Get()
         {
-            return new JsonResult(_ShopDataProvider.viewShops());
+            return new JsonResult(_ShopDataProvider.ViewShops());
         }
 
         // GET: api/Shop/5

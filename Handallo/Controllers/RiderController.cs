@@ -24,6 +24,8 @@ namespace Handallo.Controllers
         public readonly RiderDataProvider _RiderDataProvider;
         private IConfiguration _config;
         public readonly ShopDataProvider _ShopDataProvider;
+        public readonly OrderDataProvider _OrderDataProvider;
+
         public RiderController(IConfiguration config)
         {
             
@@ -73,6 +75,13 @@ namespace Handallo.Controllers
             String path = _RiderDataProvider.DownloadImage(id);
             return Download(path);
 
+        }
+
+        [HttpGet]
+        [HttpGet("vieworders")]
+        public IActionResult Vieworders()
+        {
+            return new JsonResult(_OrderDataProvider.ViewApprovedOrders());
         }
 
 

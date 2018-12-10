@@ -18,7 +18,7 @@ namespace Handallo.Global.Images
 
         public FoodItemWriter()
         {
-            //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+           // connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
             connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
         }
 
@@ -89,7 +89,7 @@ namespace Handallo.Global.Images
             using (IDbConnection dbConnection = Connection)
             {
                 string url = "https://handallo.azurewebsites.net/api/Shop/downloadfooditem/" + FoodItemId;
-                //string url = "https://localhost:44371/api/Shop/downloadfooditem/" + FoodItemId;
+               // string url = "https://localhost:44371/api/Shop/downloadfooditem/" + FoodItemId;
                 string sQuery = "UPDATE FoodItem SET path = @path WHERE FoodItemId = @FoodItemId ;"; //update product set CategoriesId = 2 where Categories = 'ab'
                 string sQuery1 = "UPDATE FoodItem SET url = @url WHERE FoodItemId = @FoodItemId ;";
 

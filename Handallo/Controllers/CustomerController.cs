@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Handallo.DataProvider;
+using Handallo.DataProvider.DataProvider;
 using Handallo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -18,11 +19,13 @@ namespace Handallo.Controllers
     public class CustomerController : ControllerBase
     {
         public readonly CustomerDataProvider _CustomerDataProvider;
+        public readonly OrderDataProvider _OrderDataProvider;
         private IConfiguration _config;
         UserModel result;
         public CustomerController(IConfiguration config)
         {
             _CustomerDataProvider = new CustomerDataProvider();
+            _OrderDataProvider = new OrderDataProvider();
             _config = config;
         }
 
@@ -60,6 +63,14 @@ namespace Handallo.Controllers
             return new OkObjectResult(new {token = token});
 
 
+        }
+
+        [HttpPost("placeorder")]
+        public async Task<IActionResult> PlaceOrder([FromBody] SingleOrder singleorder)
+        {
+
+            return await _OrderDataProvider.PlaceOrder(singleorder);
+            
         }
 
         private string BuildToken(UserModel user)

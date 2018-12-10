@@ -13,10 +13,8 @@ namespace Handallo.Models
         public DateTime OrderDate { get; set; }
         [DataType(DataType.Time)]
         public DateTime OrderTime { get; set; }
-
-        public Boolean IsSmallPotion { get; set; }
-        public Boolean IsMediumPoition { get; set; }
-        public Boolean IsLargePotion { get; set; }
-
+        public FoodItem[] Order { get; set; }
+        public String PaymentMethod { get; set; }
+        public Customer Customer  { get; set; }
     }
 }
