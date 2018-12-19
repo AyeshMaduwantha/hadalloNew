@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Handallo.Global.VerificationService;
+using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -51,15 +52,17 @@ namespace DemoApp.Services
         }
 
 
-        public async Task SendEmail(string email, string subject)
+        public async Task<IActionResult> SendEmail(string email,String verificode)
         {
+            var subject = "verificode";
             var apiKey = System.Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient("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");
-            var from = new EmailAddress("dulangah2@gmail.com", "Support");
+            var from = new EmailAddress("Handallo@gmail.com", "Reset Password");
             var to = new EmailAddress(email);
-            var plainTextContent = "sda";
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent,subject);
-            var response = await client.SendEmailAsync(msg);
+            var plainTextContent = "//";
+            var msg = MailHelper.CreateSingleEmail(from,to, subject, plainTextContent,subject);
+            var  response = await client.SendEmailAsync(msg);
+            return  new OkObjectResult(response);
         }
 
 

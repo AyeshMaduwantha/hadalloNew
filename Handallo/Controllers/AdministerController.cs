@@ -86,26 +86,51 @@ namespace Handallo.Controllers
             return new JsonResult(_ShopDataProvider.ViewShops());
         }
 
-        [HttpGet]
+ 
         [HttpGet("viewriders")]
         public IActionResult Viewriders()
         {
             return new JsonResult(_RiderDataProvider.ViewRiders());
         }
 
-        [HttpGet]
+   
         [HttpGet("vieworders")]
         public IActionResult Vieworders()
         {
             return new JsonResult(_OrderDataProvider.ViewOrders());
         }
 
-        [HttpPost]
+     
         [HttpGet("approveorder")]
         public IActionResult Approveorder(SingleOrder order)
         {
             return new JsonResult(_OrderDataProvider.ApproveOrder(order));
         }
+        [HttpGet("viewcomplains/{shopid:int}")]
+        public IActionResult Viewcomplains(int shopid)
+        {
+            return new JsonResult(__AdministerDataProvider.ViewComplains(shopid));
+        }
+
+        [HttpGet("viewratings/{shopid:int}")]
+        public IActionResult Viewratings(int shopid)
+        {
+            return new JsonResult(__AdministerDataProvider.ViewRatings(shopid));
+        }
+
+        [HttpPost("sendmailstoshop")]
+        public IActionResult Sendmails([FromBody] Email email)
+        {
+            return new JsonResult(__AdministerDataProvider.SendEmailsToShop(email));
+        }
+
+
+        [HttpPost("sendmails")]
+        public async Task<IActionResult> Sendmail([FromBody] Email email)
+        {
+            return new JsonResult(await __AdministerDataProvider.SendEmail(email));
+        }
+
 
 
 

@@ -21,8 +21,8 @@ namespace Handallo.DataProvider.DataProvider
 
         public ShopDataProvider()
         {
-             //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
-            connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
+             connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
             ////connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
@@ -119,16 +119,19 @@ namespace Handallo.DataProvider.DataProvider
             } 
         }
 
-        public dynamic GetFoodItems(int ShopId)
+        public IActionResult GetFoodItems(int ShopId)
         {
             using (IDbConnection dbConnection = Connection)
             {
-                string sQuery = "SELECT * FROM FoodItem WHERE FoodItemId IN " +
-                                "(SELECT FoodItemId FROM ShopHasFoodItem WHERE ShopId = @ShopID)";
+                //string sQuery = "SELECT * FROM FoodItem WHERE FoodItemId IN " +
+                //                "(SELECT FoodItemId FROM ShopHasFoodItem WHERE ShopId = @ShopID)";
+
+                string sQuery =
+                    "SELECT * From ShopHasFoodItem SHF JOIN FoodItem F ON SHF.ShopId = @ShopID JOIN FoodItemHasType FT ON F.FoodItemId = FT.FoodItemId JOIN FoodItemHasPrices FP ON FP.FoodItemId = FT.FoodItemId";
 
                 dbConnection.Open();
 
-                return dbConnection.Query(sQuery, new {ShopId = ShopId} );
+                return new OkObjectResult(dbConnection.Query(sQuery, new { ShopId = ShopId }));
 
             }
 

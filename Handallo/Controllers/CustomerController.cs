@@ -20,12 +20,14 @@ namespace Handallo.Controllers
     {
         public readonly CustomerDataProvider _CustomerDataProvider;
         public readonly OrderDataProvider _OrderDataProvider;
+        public readonly FoodItemDataProvider _FooditemdataDataProvider;
         private IConfiguration _config;
         UserModel result;
         public CustomerController(IConfiguration config)
         {
             _CustomerDataProvider = new CustomerDataProvider();
             _OrderDataProvider = new OrderDataProvider();
+            _FooditemdataDataProvider = new FoodItemDataProvider();
             _config = config;
         }
 
@@ -63,6 +65,13 @@ namespace Handallo.Controllers
             return new OkObjectResult(new {token = token});
 
 
+        }
+
+        [HttpGet("getfooditem/{fooditemid:int}")]
+
+        public IActionResult GetFoodItem(int fooditemid)
+        {
+            return _FooditemdataDataProvider.FoodItemDetail(fooditemid);
         }
 
         [HttpPost("placeorder")]

@@ -101,7 +101,7 @@ namespace Handallo.DataProvider
                     number = Int64.Parse(result2);
                     Image toupload = new Image(rider.image, number);
                     Senders emailsender = new Senders();
-                    await emailsender.SendEmail("heshan.jayarathna05@gmail.com", "VerifiCode");
+                    await emailsender.SendEmail(email, rider.VerifiCode);
                     return await UploadImage(toupload);
 
                 }

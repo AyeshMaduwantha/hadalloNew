@@ -5,8 +5,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using DemoApp.Services;
 using Handallo.Global;
 using Handallo.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Handallo.DataProvider
 {
@@ -111,8 +113,88 @@ namespace Handallo.DataProvider
 
         }
 
-        //Administer
+        public IActionResult ViewComplains(int shopid)
+        {
+            try
+            {
+                using (IDbConnection dbConnection = Connection)
+                {
+
+                    String sQuery = "SELECT * FROM ShapHasComplains WHERE ShopID = @shopid";
+
+                    dbConnection.Open();
+
+                    return new OkObjectResult(dbConnection.QueryFirstOrDefault<String>(sQuery, new {ShopId = shopid}));
+
+                }
+            }
+            catch (Exception e)
+            {
+                return new ConflictResult();
+            }
 
 
+            
+        }
+
+
+        public IActionResult ViewRatings(int shopid)
+        {
+            try
+            {
+                using (IDbConnection dbConnection = Connection)
+                {
+
+                    String sQuery = "SELECT * FROM ShapHasRatings WHERE ShopID = @shopid";
+
+                    dbConnection.Open();
+
+                    return new OkObjectResult(dbConnection.QueryFirstOrDefault<String>(sQuery, new { ShopId = shopid }));
+
+                }
+            }
+            catch (Exception e)
+            {
+                return new ConflictResult();
+            }
+
+
+
+        }
+
+
+        public IActionResult SendEmailsToShop(Email email)
+        {
+            try
+            {
+                using (IDbConnection dbConnection = Connection)
+                {
+                    String sQuery =
+                        "INSERT INTO ShopHasMails(ShopId,Email)Values(@ShopId,@Email) WHERE ShopId = @ShopId";
+
+                    dbConnection.QueryFirstOrDefault(sQuery, new {ShopId = email.Id});
+
+                    return new OkResult();
+                }
+                 
+            }
+            catch (Exception e)
+            {
+                return new ConflictResult();
+            }
+
+
+
+        }
+
+
+        public async Task<IActionResult> SendEmail(Email email)
+        {
+           Senders sender = new Senders();
+
+           return await (sender.SendEmail(email.Message,"xdcfvg"));
+
+
+        }
     }
 }

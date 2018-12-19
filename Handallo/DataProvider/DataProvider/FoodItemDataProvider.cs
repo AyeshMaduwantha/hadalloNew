@@ -19,8 +19,8 @@ namespace Handallo.DataProvider.DataProvider
 
         public FoodItemDataProvider()
         {
-            //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
-            connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
+            connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
             //// connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
 
@@ -108,6 +108,26 @@ namespace Handallo.DataProvider.DataProvider
             }
 
           
+        }
+
+        public IActionResult FoodItemDetail(int FoodItemId)
+        {
+            try
+            {
+                using (IDbConnection dbConnection = Connection)
+                {
+
+                    string sQuery =
+                        "SELECT * FROM FoodItem FI JOIN FoodItemHasType FT ON FI.FoodItemId = FT.FoodItemId JOIN FoodItemHasPrices FP ON FP.FoodItemId = FT.FoodItemId WHERE FI.FoodItemId = @FoodItemID ";
+
+                    return new JsonResult(dbConnection.Query(sQuery, new {FoodItemId = FoodItemId}));
+                }
+            }
+            catch (Exception e)
+            {
+                return new ConflictResult();
+            }
+           
         }
 
 

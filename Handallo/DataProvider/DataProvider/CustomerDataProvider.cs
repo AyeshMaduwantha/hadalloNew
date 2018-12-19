@@ -79,7 +79,7 @@ namespace Handallo.DataProvider
                     dbConnection.Execute(sQuery, customer);
                     Senders emailsender = new Senders();
                    //await emailsender.SendEmailAsync("csanjeewag@gmail.com", customer.VerifiCode);
-                    await emailsender.SendEmail("heshan.jayarathna05@gmail.com","VerifiCode");
+                    await emailsender.SendEmail(email, customer.VerifiCode);
                     return true;
 
                 }

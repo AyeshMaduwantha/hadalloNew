@@ -21,8 +21,8 @@ namespace Handallo.DataProvider.DataProvider
 
         public OrderDataProvider()
         {
-            //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
-            connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
+            connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
             /////connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
         public SqlConnection Connection
@@ -117,14 +117,14 @@ namespace Handallo.DataProvider.DataProvider
 
         }
 
-        public dynamic ViewOrders()
+        public IActionResult ViewOrders()
         {
             using (IDbConnection dbConnection = Connection)
             {
                 string sQuery = "SELECT * FROM Deliver";
                 dbConnection.Open();
 
-                return dbConnection.Query(sQuery);
+                return new JsonResult(dbConnection.Query(sQuery));
             }
         }
 
