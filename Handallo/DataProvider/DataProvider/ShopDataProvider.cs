@@ -126,8 +126,12 @@ namespace Handallo.DataProvider.DataProvider
                 //string sQuery = "SELECT * FROM FoodItem WHERE FoodItemId IN " +
                 //                "(SELECT FoodItemId FROM ShopHasFoodItem WHERE ShopId = @ShopID)";
 
+                //string sQuery =
+                //    "SELECT * From ShopHasFoodItem SHF JOIN FoodItem F ON SHF.ShopId = @ShopID JOIN FoodItemHasType FT ON F.FoodItemId = FT.FoodItemId JOIN FoodItemHasPrices FP ON FP.FoodItemId = FT.FoodItemId";
+
                 string sQuery =
-                    "SELECT * From ShopHasFoodItem SHF JOIN FoodItem F ON SHF.ShopId = @ShopID JOIN FoodItemHasType FT ON F.FoodItemId = FT.FoodItemId JOIN FoodItemHasPrices FP ON FP.FoodItemId = FT.FoodItemId";
+                    "SELECT * From ShopHasFoodItem SHF, FOODITEM FI, FoodItemHasType FT, FoodItemHasPrices FP " +
+                    "WHERE SHF.SHOPID = @ShopId  AND SHF.FOODITEMID = FI.FOODITEMID AND  FI.FOODITEMID = FP.FOODITEMID AND FI.FOODITEMID = FT.FOODITEMID";
 
                 dbConnection.Open();
 
