@@ -91,6 +91,7 @@ namespace Handallo.DataProvider
         public UserModel LoginCustomer(Login login)
         {
             String checkUserName;
+            string ID;
             login.Pass_word = HashAndSalt.HashSalt(login.Pass_word);
 
             var email = login.Email;
@@ -99,9 +100,14 @@ namespace Handallo.DataProvider
             using (IDbConnection dbConnection = Connection)
             {
                 string sQuery = "SELECT FirstName FROM Customer WHERE Email = @Email AND Pass_word = @Pass_word";
+                string sQuery1 = "SELECT CustomerId from Customer where Email = @email";
+                
                 dbConnection.Open();
                 checkUserName = dbConnection.QueryFirstOrDefault<String>(sQuery, new { @Email = email, @Pass_word = password });
-
+                dbConnection.Close();
+                dbConnection.Open();
+                ID = dbConnection.QueryFirstOrDefault<String>(sQuery1, new { @Email = email });
+                dbConnection.Close();
 
             }
 
@@ -112,7 +118,7 @@ namespace Handallo.DataProvider
             else
             {
                 UserModel user = null;
-                user = new UserModel { Name = checkUserName, Email = email };
+                user = new UserModel {Id = ID, Name = checkUserName, Email = email };
                 return user;
                 /* var method = typeof(TokenCreator).GetMethod("createToken");
                  var action = (Action<TokenCreator>)Delegate.CreateDelegate(typeof(Action<TokenCreator>), method);
