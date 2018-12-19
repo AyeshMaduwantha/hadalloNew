@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Security.AccessControl;
@@ -21,7 +22,7 @@ namespace Handallo.DataProvider.DataProvider
 
         public OrderDataProvider()
         {
-           // connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //connectionString = "Server=DESKTOP-ALMQ9QA\\SQLEXPRESS;Database=handallo;Trusted_Connection=True;MultipleActiveResultSets=true";
             connectionString = "Server=tcp:handallo.database.windows.net;Database=handallo;User ID=Handallo.336699;Password=16xand99x.;Trusted_Connection=false;MultipleActiveResultSets=true";
             /////connectionString = "Server=tcp: handallo.database.windows.net,1433; Initial Catalog = Handallo;Database=handallo; User ID = Handallo.336699; Password = 16xand99x.Trusted_Connection=True;MultipleActiveResultSets=true";
         }
@@ -76,9 +77,9 @@ namespace Handallo.DataProvider.DataProvider
                     IsLargePotion =  this.IsLargePotion,
                 });
 
+                dbConnection.Close();
 
-
-                if (deliver(order, orderid))
+                if (Deliver(order, orderid))
               {
                 return new OkResult();
               }
@@ -97,12 +98,16 @@ namespace Handallo.DataProvider.DataProvider
         //    IsRiderConfirmed BIT,
         //PaymentStatus nvarchar(20), 
 
-        private Boolean deliver(SingleOrder order,long orderid)
+        private Boolean Deliver(SingleOrder order,long orderid)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 String sQuery = "INSERT INTO Deliver(OrderId,CustomerId,IsAdminConfirmed,PaymentStatus)" +
                                 "VAlUES(@OrderId,@CustomerId,@IsAdminConfirmed,@PaymentStatus)";
+                String sQuery1 = "INSERT INTO CustomerHasLocation(CustomerId,CurrentLng,CurrentLat) " +
+                                 "VALUES(@CustomerId,@CurrentLng,@CurrentLat)";
+
+                dbConnection.Open();
 
                 dbConnection.Execute(sQuery, new {
                     OrderID = orderid,
@@ -111,7 +116,22 @@ namespace Handallo.DataProvider.DataProvider
                     PaymentStatus = "Not paid",
 
                 });
+
+                dbConnection.Close();
+
+                dbConnection.Open();
+                dbConnection.Execute(sQuery1, new
+                {
+                    CustomerId = order.Customer.CustomerId,
+                    CurrentLng = order.Customer.CurrentLng,
+                    CurrentLat = order.Customer.CurrentLat,
+
+                });
+
+                dbConnection.Close();
             }
+
+     
 
             return true;
 
